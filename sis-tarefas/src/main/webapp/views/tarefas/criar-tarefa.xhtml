@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css"/>
+    <h:outputScript name="jquery/jquery.js" library="primefaces"/>
+
+    <title>Nova Tarefa</title>
+
+</h:head>
+<h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
+    <h:form>
+        <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
+             style="width: 600px; text-align: center; background: white;">
+
+            <!-- Título -->
+            <h1 style="margin-bottom: 20px; color: #004d9b;">Cadastro de Tarefa</h1>
+
+            <!-- Formulário com 2 colunas e inputs do mesmo tamanho -->
+            <p:panelGrid columns="2" columnClasses="p-mr-2, p-ml-2" style="width: 100%; text-align: left;">
+                <p:outputLabel for="titulo" value="Título: "/>
+                <p:outputLabel for="descricao" value="Descrição: "/>
+
+                <p:inputTextarea id="titulo" value="#{tarefasBean.tarefa.titulo}" required="true" style="width: 100%;"/>
+                <p:inputTextarea id="descricao" value="#{tarefasBean.tarefa.descricao}" required="true"
+                                 style="width: 100%;"/>
+
+                <p:outputLabel for="responsavel" value="Responsável: "/>
+                <p:outputLabel for="prioridade" value="Prioridade: "/>
+                <p:selectOneMenu id="responsavel"
+                                 value="#{tarefasBean.idUsuario}"
+                                 panelStyle="width:180px"
+                                 filter="true"
+                                 filterMatchMode="startsWith"
+                                 filterNormalize="true"
+                                 required="true"
+                                 style="width: 100%;">
+                    <f:selectItem itemLabel="Responsável" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{tarefasBean.listaDeUsuarios}"
+                                   var="usuario"
+                                   itemLabel="#{usuario.email}"
+                                   itemValue="#{usuario.id}"/>
+
+                    <f:facet name="footer">
+                        <h:outputText value="#{tarefasBean.listaDeUsuarios.size()} usuarios"
+                                      style="font-weight:bold;" styleClass="py-1 block"/>
+                    </f:facet>
+                </p:selectOneMenu>
+
+                <p:selectOneMenu id="prioridade"
+                                 value="#{tarefasBean.tarefa.prioridade}"
+                                 panelStyle="width:200px"
+                                 filter="true"
+                                 filterMatchMode="startsWith"
+                                 filterNormalize="true"
+                                 required="true"
+                                 style="width: 100%;">
+                    <f:selectItem itemLabel="Prioridade" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{tarefasBean.listaDePrioridades}"
+                                   var="prioridade"
+                                   itemLabel="#{prioridade.name()}"
+                                   itemValue="#{prioridade}"/>
+
+                    <f:facet name="footer">
+                        <h:outputText value="#{tarefasBean.listaDePrioridades.size()} prioridades"
+                                      style="font-weight:bold;" styleClass="py-1 block"/>
+                    </f:facet>
+                </p:selectOneMenu>
+
+                <p:outputLabel for="data-inicio" value="Data de Início: "/>
+                <p:outputLabel for="data-finalizacao" value="Data de Início: "/>
+
+                <p:calendar id="data-inicio" style="width: 100%;" value="#{tarefasBean.tarefa.dataInicio}"
+                            pattern="dd/MM/yyyy"
+                            required="true"/>
+                <p:calendar id="data-finalizacao" value="#{tarefasBean.tarefa.dataFinalizacao}" pattern="dd/MM/yyyy"
+                            required="true"/>
+            </p:panelGrid>
+            <div class="flex justify-content-between mt-3" style="width: 100%;">
+                <p:button value="Voltar" outcome="/views/tarefas/geral-tarefas" icon="pi pi-arrow-left"/>
+                <p:commandButton value="Salvar" action="#{tarefasBean.salvarTarefa()}" update="@form"/>
+            </div>
+
+        </div>
+    </h:form>
+
+</h:body>
+</html>

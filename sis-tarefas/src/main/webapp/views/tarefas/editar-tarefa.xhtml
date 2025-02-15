@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css"/>
+    <h:outputScript name="jquery/jquery.js" library="primefaces"/>
+
+    <title>Edição de Tarefa</title>
+
+</h:head>
+<h:body>
+    <h1>Editar Tarefa:</h1>
+    <h:form>
+        <p:panelGrid columns="2">
+            <p:outputLabel for="titulo" value="Título: "/>
+            <p:inputText id="titulo" value="#{tarefasBean.tarefa.titulo}" required="true"/>
+
+            <p:outputLabel for="descricao" value="Descrição: "/>
+            <p:inputTextarea id="descricao" value="#{tarefasBean.tarefa.descricao}" required="true"/>
+
+            <p:outputLabel for="responsavel" value="Responsável: "/>
+            <h:selectOneMenu id="responsavel" value="#{tarefasBean.tarefa.usuario.id}" required="true">
+                <f:selectItem itemLabel="Selecione um responsável" itemValue="" noSelectionOption="true"/>
+                <f:selectItems value="#{tarefasBean.listaDeUsuarios}" var="usuario" itemLabel="#{usuario.primeiro_Nome}"
+                               itemValue="#{usuario.id}"/>
+            </h:selectOneMenu>
+
+            <p:outputLabel for="prioridade" value="Prioridade: "/>
+            <h:selectOneMenu id="prioridade" value="#{tarefasBean.tarefa.prioridade}" required="true">
+                <f:selectItem itemLabel="Selecione uma prioridade" itemValue="" noSelectionOption="true"/>
+                <f:selectItems value="#{tarefasBean.listaDePrioridades}" var="prioridade"
+                               itemLabel="#{prioridade.name()}" itemValue="#{prioridade}"/>
+            </h:selectOneMenu>
+
+            <p:outputLabel for="data-inicio" value="Data de Início: "/>
+            <p:calendar id="data-inicio" value="#{tarefasBean.tarefa.dataInicio}" pattern="dd/MM/yyyy" required="true"/>
+
+            <p:outputLabel for="data-finalizacao" value="Data de Início: "/>
+            <p:calendar id="data-finalizacao" value="#{tarefasBean.tarefa.dataFinalizacao}" pattern="dd/MM/yyyy"
+                        required="true"/>
+            <p:commandButton value="Editar" action="#{tarefasBean.editarTarefa()}" update="@form"/>
+        </p:panelGrid>
+
+    </h:form>
+    <p:button value="Voltar" outcome="/views/tarefas/geral-tarefas"/>
+</h:body>
+</html>

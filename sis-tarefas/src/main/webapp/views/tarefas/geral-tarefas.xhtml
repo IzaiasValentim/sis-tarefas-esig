@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css"/>
+    <h:outputScript name="jquery/jquery.js" library="primefaces"/>
+
+    <title>Tarefas</title>
+
+</h:head>
+<h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
+
+    <h:form>
+        <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
+             style="width: 100%; min-height:450px;  text-align: center; background: white;">
+
+            <!-- Título -->
+            <h1 style="margin-bottom: 20px; color: #004d9b;">Listagem de tarefas</h1>
+
+            <p:dataTable id="tabelaDeTarefas"
+                         widgetVar="tabelaDeTarefas"
+                         var="tarefa"
+                         value="#{tarefasBean.tarefas}"
+                         paginator="true" rows="5"
+                         paginatorPosition="bottom"
+                         filteredValue="#{tarefasBean.tarefasFiltradas}"
+            >
+
+                <p:column headerText="Id | Prioridade">
+                    <h:outputText value="#{tarefa.id} "/>
+                    <p:button value="#{tarefa.prioridade}" disabled="true"
+                              styleClass="btn-prioridade-#{tarefa.prioridade} prioridade"/>
+                </p:column>
+
+                <p:column headerText="Titulo" filterBy="#{tarefa.titulo}" sortBy="#{tarefa.titulo}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{tarefa.titulo}"/>
+                </p:column>
+
+                <!-- Campo e Filtro por responsável -->
+                <p:column field="Responsável" filterMatchMode="exact"
+                          sortBy="#{tarefa.usuario.email}"
+                          filterBy="#{tarefa.usuario.email}">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('tabelaDeTarefas').filter()" styleClass="ui-custom-filter">
+                            <f:selectItem itemLabel="All" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{tarefasBean.listaDeUsuarios}" var="usuario"
+                                           itemLabel="#{usuario.email}"
+                                           itemValue="#{usuario.email}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+
+                    <h:outputText style="vertical-align: middle; margin-left: .5rem"
+                                  value="#{tarefa.usuario.email}"/>
+                </p:column>
+
+                <p:column headerText="Descrição" filterBy="#{tarefa.descricao}"
+                          sortBy="#{tarefa.descricao}"
+                          filterMatchMode="contains">
+                    <h:outputText value="#{tarefa.descricao}"/>
+                </p:column>
+                <!-- Campo e Filtro por Situação -->
+                <p:column field="Situação" filterMatchMode="exact"
+                          sortBy="#{tarefa.situacao}"
+                          filterBy="#{tarefa.situacao}">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('tabelaDeTarefas').filter()" styleClass="ui-custom-filter">
+                            <f:selectItem itemLabel="All" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{tarefasBean.listaDeSituacao}" var="situacao"
+                                           itemLabel="#{situacao.name()}"
+                                           itemValue="#{situacao}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+
+                    <h:outputText style="vertical-align: middle; margin-left: .5rem"
+                                  value="#{tarefa.situacao}"/>
+                </p:column>
+
+                <p:column headerText="Ações">
+                    <!--Botões de finalizar e editar -->
+                    <p:growl id="growl-acoes"/>
+                    <p:splitButton value="Finalizar" update="growl-acoes" icon="pi pi-check"
+                                   oncomplete="PF('dlgFinalizarTarefa').show()">
+
+                        <!-- Botão para Editar (Redireciona com ID) -->
+                        <p:menuitem value="Editar" icon="pi pi-pencil"
+                                    outcome="/views/tarefas/editar-tarefa">
+                            <f:param name="idTarefa" value="#{tarefa.id}"/>
+                        </p:menuitem>
+                        <f:setPropertyActionListener value="#{tarefa.id}" target="#{tarefasBean.idTarefa}"/>
+                    </p:splitButton>
+
+                    <!--Botão de excluir -->
+                    <p:commandButton class="rounded-button ui-button-danger ui-button-flat"
+                                     icon="pi pi-times"
+                                     process="@this"
+                                     oncomplete="PF('dlgExcluirTarefa').show()">
+                        <f:setPropertyActionListener value="#{tarefa.id}" target="#{tarefasBean.idTarefa}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <div class="flex justify-content-around mt-3" style="width: 100%;">
+                <p:button value="Voltar" outcome="/index" icon="pi pi-arrow-left" styleClass="p-button-outlined"/>
+                <p:button value="Criar Tarefa" outcome="/views/tarefas/criar-tarefa" icon="pi pi-user-plus"/>
+            </div>
+        </div>
+        <!-- Confirmação de finalização -->
+        <p:confirmDialog widgetVar="dlgFinalizarTarefa"
+                         showEffect="fade"
+                         width="300"
+                         message="Finalizar Tarefa?"
+                         header="Confirmar"
+                         severity="warn">
+            <p:commandButton value="Sim" icon="pi pi-check"
+                             update="tabelaDeTarefas"
+                             actionListener="#{tarefasBean.finalizarTarefa()}"
+                             process="@this"
+                             oncomplete="PF('dlgFinalizarTarefa').hide()"/>
+            <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                             onclick="PF('dlgFinalizarTarefa').hide()"/>
+        </p:confirmDialog>
+
+        <!-- Confirmação de Exclusão -->
+        <p:confirmDialog widgetVar="dlgExcluirTarefa"
+                         showEffect="fade"
+                         width="300"
+                         message="Excluir Tarefa?"
+                         header="Confirmar"
+                         severity="warn">
+            <p:commandButton value="Sim" icon="pi pi-check"
+                             update="tabelaDeTarefas"
+                             actionListener="#{tarefasBean.excluirTarefa()}"
+                             process="@this"
+                             oncomplete="PF('dlgExcluirTarefa').hide()"/>
+            <p:commandButton value="Não" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                             onclick="PF('dlgExcluirTarefa').hide()"/>
+        </p:confirmDialog>
+    </h:form>
+
+    <style type="">
+
+        button.prioridade {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: "Bahnschrift";
+            max-height: 30px;
+            max-width: 60px;
+        }
+
+        button.btn-prioridade-ALTA {
+            background: #c63737;
+        }
+
+        button.btn-prioridade-MEDIA {
+            background: #f2b837;
+        }
+
+        button.btn-prioridade-BAIXA {
+            background: #2f9c0a;
+        }
+
+        .ui-splitbutton .ui-button {
+            background-color: #23547b; /* Azul */
+            border: none;
+            color: white;
+        }
+    </style>
+</h:body>
+</html>

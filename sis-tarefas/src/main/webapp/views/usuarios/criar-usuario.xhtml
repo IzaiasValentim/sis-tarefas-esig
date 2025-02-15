@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="primefaces">
+
+<h:head>
+    <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css"/>
+    <h:outputScript name="jquery/jquery.js" library="primefaces"/>
+    <title>Novo Usuário</title>
+</h:head>
+
+<h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
+
+    <h:form>
+        <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
+             style="width: 450px; text-align: center; background: white;">
+
+            <!-- Título -->
+            <h2 style="margin-bottom: 20px; color: #004d9b;">Cadastro de Usuário</h2>
+
+            <!-- Formulário com 2 colunas e inputs do mesmo tamanho -->
+            <p:panelGrid columns="2" columnClasses="p-mr-2, p-ml-2" style="width: 100%; text-align: left;">
+                <p:outputLabel for="primeiroNome" value="Primeiro Nome"/>
+                <p:outputLabel for="ultimoNome" value="Último Nome"/>
+
+                <p:inputText id="primeiroNome" value="#{usuariosBean.usuario.primeiro_Nome}" required="true"
+                             requiredMessage="Campo obrigatório" placeholder="...."
+                             style="width: 100%;"/>
+                <p:inputText id="ultimoNome" value="#{usuariosBean.usuario.ultimo_Nome}" required="true"
+                             requiredMessage="Campo obrigatório" placeholder="...."
+                             style="width: 100%;"/>
+
+                <p:outputLabel for="email" value="Email"/>
+                <p:outputLabel for="senha" value="Senha"/>
+
+                <p:inputText id="email" value="#{usuariosBean.usuario.email}" required="true"
+                             requiredMessage="Campo obrigatório" placeholder="...." style="width: 100%;"/>
+                <p:password id="senha" value="#{usuariosBean.usuario.senha}" required="true"
+                            requiredMessage="Campo obrigatório" toggleMask="true"
+                            placeholder="Digite a senha" style="width: 100%;"/>
+            </p:panelGrid>
+
+            <!-- Botões -->
+            <div class="flex justify-content-between mt-3" style="width: 100%;">
+                <p:commandButton value="Salvar" action="#{usuariosBean.salvar()}" update="@form" icon="pi pi-save"
+                                 styleClass="p-button-success"/>
+                <p:button value="Voltar" outcome="/views/usuarios/gerenciar-usuario" icon="pi pi-arrow-right"
+                          styleClass="p-button-outlined"/>
+            </div>
+        </div>
+    </h:form>
+
+    <!-- Rodapé -->
+    <h:outputText value="Desenvolvido por IzaiasValentim"
+                  style="margin-top: 15px; font-size: 12px; color: #666;"/>
+</h:body>
+</html>
