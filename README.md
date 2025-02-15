@@ -65,7 +65,7 @@ Estas são as dependências da aplicação:
 #### 3. No painel de controle do WildFly, configure seu Data Source com o driver do PostgreSQL e JNDI Name: 'SisTarefas'
 
 #### 4. Execute a aplicação e a acesse, onde por padrão será: http://localhost:8080/sis-tarefas-1.0-SNAPSHOT/
-  -  Pode varia de acordo com o contexto ou porta de execução definido para execução do WildFly.
+  -  Pode variar de acordo com o contexto ou porta de execução definido para execução do WildFly.
 
 #### Creditos:
 - [Sample readme](https://github.com/YousefIbrahimismail/Project-README-Template/tree/main)
