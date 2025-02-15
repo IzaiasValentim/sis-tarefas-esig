@@ -2,6 +2,7 @@ package com.esig.izaiasvalentim.domain.entity;
 
 import com.esig.izaiasvalentim.domain.entity.enums.PrioridadeTarefaEnum;
 import com.esig.izaiasvalentim.domain.entity.enums.SituacaoTarefaEnum;
+import com.esig.izaiasvalentim.uteis.TimeUtils;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -24,8 +25,9 @@ public class Tarefa {
     private LocalDate dataInicio;
     private LocalDate dataFinalizacao;
     private Boolean estaFinalizada;
+    @Transient
+    private Integer diasAteFinalizar;
     private Boolean estaDeletada;
-
 
     public Tarefa() {
     }
@@ -92,6 +94,10 @@ public class Tarefa {
 
     public void setDataFinalizacao(LocalDate dataFinalizacao) {
         this.dataFinalizacao = dataFinalizacao;
+    }
+
+    public Integer getDiasAteFinalizar() {
+        return TimeUtils.diasAteFinalizarTarefa(this);
     }
 
     public Boolean getEstaFinalizada() {
