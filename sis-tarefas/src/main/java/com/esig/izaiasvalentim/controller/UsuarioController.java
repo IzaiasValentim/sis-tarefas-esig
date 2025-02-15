@@ -2,10 +2,14 @@ package com.esig.izaiasvalentim.controller;
 
 import com.esig.izaiasvalentim.domain.entity.Usuario;
 import com.esig.izaiasvalentim.service.usuario.UsuarioServiceImp;
+import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
+import javax.persistence.PersistenceException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,29 +19,55 @@ public class UsuarioController implements Serializable {
 
     @EJB
     private UsuarioServiceImp usuarioService;
-
+    private Usuario usuario;
     private List<Usuario> usuarios;
-
-    private Usuario usuario = new Usuario();
-
-    public List<Usuario> getUsuarios() {
-        return usuarios = usuarioService.todos();
-    }
-
     private Long idUsuario;
+
+    @PostConstruct
+    public void init() {
+        usuario = new Usuario();
+        usuarios = usuarioService.todos();
+    }
 
     public void novo() {
         usuario = new Usuario();
     }
 
     public void salvar() {
-        usuarioService.salvar(usuario);
-        novo();
+        try {
+            usuarioService.salvar(usuario);
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(
+                                    FacesMessage.SEVERITY_INFO, "Sucesso", usuario.toString() + " foi cadastrado com sucesso!"));
+            novo();
+        } catch (PersistenceException violationException) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(
+                                    FacesMessage.SEVERITY_ERROR, "Erro ao adicionar usuário", violationException.getMessage()));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(
+                                    FacesMessage.SEVERITY_ERROR, "Erro ao criar usuário :/", e.getMessage()));
+        }
     }
 
     public void excluir() {
-        usuarioService.remover(idUsuario);
-        idUsuario = null;
+        try {
+            usuarioService.remover(idUsuario);
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(
+                            FacesMessage.SEVERITY_INFO, "Sucesso", "Usuário removido com sucesso!"));
+            idUsuario = null;
+
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(
+                                    FacesMessage.SEVERITY_ERROR, "Erro ao remover usuário :/", e.getMessage()));
+        }
     }
 
     public UsuarioServiceImp getUsuarioService() {
@@ -48,16 +78,20 @@ public class UsuarioController implements Serializable {
         this.usuarioService = usuarioService;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios = usuarioService.todos();
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
     public Long getIdUsuario() {
