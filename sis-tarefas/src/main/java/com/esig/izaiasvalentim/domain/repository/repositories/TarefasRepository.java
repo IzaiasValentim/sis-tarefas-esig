@@ -30,10 +30,11 @@ public class TarefasRepository extends GeneralJPARepository<Tarefa> {
 
     @Override
     public List<Tarefa> findAll() {
-        Query query =
-                em.createQuery(
-                        "SELECT t FROM TAREFAS t WHERE t.estaDeletada = false"
-                );
+        Query query = em.createQuery(
+                "SELECT t FROM TAREFAS t " +
+                        "WHERE t.estaDeletada = false " +
+                        "ORDER BY t.dataInicio ASC"
+        );
         return query.getResultList();
     }
 }

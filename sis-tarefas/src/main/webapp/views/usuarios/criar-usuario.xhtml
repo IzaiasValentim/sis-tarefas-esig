@@ -13,6 +13,8 @@
 
 <h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
 
+    <p:growl id="messages" showDetail="true" life="2000"/>
+
     <h:form>
         <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
              style="width: 450px; text-align: center; background: white;">
@@ -44,7 +46,7 @@
 
             <!-- Botões -->
             <div class="flex justify-content-between mt-3" style="width: 100%;">
-                <p:commandButton value="Salvar" action="#{usuariosBean.salvar()}" update="@form" icon="pi pi-save"
+                <p:commandButton value="Salvar" action="#{usuariosBean.salvar()}" update="@form messages" icon="pi pi-save"
                                  styleClass="p-button-success"/>
                 <p:button value="Voltar" outcome="/views/usuarios/gerenciar-usuario" icon="pi pi-arrow-right"
                           styleClass="p-button-outlined"/>

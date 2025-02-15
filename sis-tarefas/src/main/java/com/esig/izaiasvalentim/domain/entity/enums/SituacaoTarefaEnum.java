@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SituacaoTarefaEnum {
-    PENDENTE(1),
-    EM_ANDAMENTO(2),
-    PAUSADA(3),
-    FINALIZADA(4),
-    CANCELADA(5);
+    EM_ANDAMENTO(1),
+    CONCLUIDA(2);
+
 
     private final int valorSituacao;
 

@@ -12,40 +12,82 @@
     <title>Edição de Tarefa</title>
 
 </h:head>
-<h:body>
-    <h1>Editar Tarefa:</h1>
+<h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
+    <p:growl id="messages" showDetail="true" life="2000"/>
     <h:form>
-        <p:panelGrid columns="2">
-            <p:outputLabel for="titulo" value="Título: "/>
-            <p:inputText id="titulo" value="#{tarefasBean.tarefa.titulo}" required="true"/>
+        <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
+             style="width: 600px; text-align: center; background: white;">
 
-            <p:outputLabel for="descricao" value="Descrição: "/>
-            <p:inputTextarea id="descricao" value="#{tarefasBean.tarefa.descricao}" required="true"/>
+            <!-- Título -->
+            <h1 style="margin-bottom: 20px; color: #004d9b;">Edição de Tarefa:</h1>
 
-            <p:outputLabel for="responsavel" value="Responsável: "/>
-            <h:selectOneMenu id="responsavel" value="#{tarefasBean.tarefa.usuario.id}" required="true">
-                <f:selectItem itemLabel="Selecione um responsável" itemValue="" noSelectionOption="true"/>
-                <f:selectItems value="#{tarefasBean.listaDeUsuarios}" var="usuario" itemLabel="#{usuario.primeiro_Nome}"
-                               itemValue="#{usuario.id}"/>
-            </h:selectOneMenu>
+            <!-- Formulário com 2 colunas e inputs do mesmo tamanho -->
+            <p:panelGrid columns="2" columnClasses="p-mr-2, p-ml-2" style="width: 100%; text-align: left;">
+                <p:outputLabel for="titulo" value="Título: "/>
+                <p:outputLabel for="descricao" value="Descrição: "/>
 
-            <p:outputLabel for="prioridade" value="Prioridade: "/>
-            <h:selectOneMenu id="prioridade" value="#{tarefasBean.tarefa.prioridade}" required="true">
-                <f:selectItem itemLabel="Selecione uma prioridade" itemValue="" noSelectionOption="true"/>
-                <f:selectItems value="#{tarefasBean.listaDePrioridades}" var="prioridade"
-                               itemLabel="#{prioridade.name()}" itemValue="#{prioridade}"/>
-            </h:selectOneMenu>
+                <p:inputTextarea id="titulo" value="#{tarefasBean.tarefa.titulo}" required="true" style="width: 100%;"/>
+                <p:inputTextarea id="descricao" value="#{tarefasBean.tarefa.descricao}" required="true"
+                                 style="width: 100%;"/>
 
-            <p:outputLabel for="data-inicio" value="Data de Início: "/>
-            <p:calendar id="data-inicio" value="#{tarefasBean.tarefa.dataInicio}" pattern="dd/MM/yyyy" required="true"/>
+                <p:outputLabel for="responsavel" value="Responsável: "/>
+                <p:outputLabel for="prioridade" value="Prioridade: "/>
+                <p:selectOneMenu id="responsavel"
+                                 value="#{tarefasBean.tarefa.usuario.id}"
+                                 panelStyle="width:180px"
+                                 filter="true"
+                                 filterMatchMode="startsWith"
+                                 filterNormalize="true"
+                                 required="true"
+                                 style="width: 100%;">
+                    <f:selectItem itemLabel="Responsável" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{tarefasBean.listaDeUsuarios}"
+                                   var="usuario"
+                                   itemLabel="#{usuario.email}"
+                                   itemValue="#{usuario.id}"/>
 
-            <p:outputLabel for="data-finalizacao" value="Data de Início: "/>
-            <p:calendar id="data-finalizacao" value="#{tarefasBean.tarefa.dataFinalizacao}" pattern="dd/MM/yyyy"
-                        required="true"/>
-            <p:commandButton value="Editar" action="#{tarefasBean.editarTarefa()}" update="@form"/>
-        </p:panelGrid>
+                    <f:facet name="footer">
+                        <h:outputText value="#{tarefasBean.listaDeUsuarios.size()} usuarios"
+                                      style="font-weight:bold;" styleClass="py-1 block"/>
+                    </f:facet>
+                </p:selectOneMenu>
 
+                <p:selectOneMenu id="prioridade"
+                                 value="#{tarefasBean.tarefa.prioridade}"
+                                 panelStyle="width:200px"
+                                 filter="true"
+                                 filterMatchMode="startsWith"
+                                 filterNormalize="true"
+                                 required="true"
+                                 style="width: 100%;">
+                    <f:selectItem itemLabel="Prioridade" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{tarefasBean.listaDePrioridades}"
+                                   var="prioridade"
+                                   itemLabel="#{prioridade.name()}"
+                                   itemValue="#{prioridade}"/>
+
+                    <f:facet name="footer">
+                        <h:outputText value="#{tarefasBean.listaDePrioridades.size()} prioridades"
+                                      style="font-weight:bold;" styleClass="py-1 block"/>
+                    </f:facet>
+                </p:selectOneMenu>
+
+                <p:outputLabel for="data-inicio" value="Data de Início: "/>
+                <p:outputLabel for="data-finalizacao" value="Data de Início: "/>
+
+                <p:calendar id="data-inicio" style="width: 100%;" value="#{tarefasBean.tarefa.dataInicio}"
+                            pattern="dd/MM/yyyy"
+                            required="true"/>
+                <p:calendar id="data-finalizacao" value="#{tarefasBean.tarefa.dataFinalizacao}" pattern="dd/MM/yyyy"
+                            required="true"/>
+            </p:panelGrid>
+            <div class="flex justify-content-between mt-3" style="width: 100%;">
+                <p:button value="Voltar" outcome="/views/tarefas/geral-tarefas" icon="pi pi-arrow-left"/>
+                <p:commandButton value="Editar" action="#{tarefasBean.editarTarefa()}" update="@form messages"/>
+            </div>
+
+        </div>
     </h:form>
-    <p:button value="Voltar" outcome="/views/tarefas/geral-tarefas"/>
+
 </h:body>
 </html>
