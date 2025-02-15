@@ -13,7 +13,7 @@
 
 </h:head>
 <h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
-
+    <p:growl id="messages" showDetail="true" life="2000"/>
     <h:form>
         <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
              style="width: 100%; min-height:450px;  text-align: center; background: white;">
@@ -30,21 +30,34 @@
                          filteredValue="#{tarefasBean.tarefasFiltradas}"
             >
 
-                <p:column headerText="Id | Prioridade">
+                <!--Coluna de id/prioridade -->
+                <p:column headerText="Id | Prioridade" style="width:8%; text-align: center;">
                     <h:outputText value="#{tarefa.id} "/>
                     <p:button value="#{tarefa.prioridade}" disabled="true"
                               styleClass="btn-prioridade-#{tarefa.prioridade} prioridade"/>
                 </p:column>
 
+                <!--Coluna do prazo até a deadline. -->
+                <p:column headerText="Prazo" style="width:5%; text-align: center;" sortBy="#{tarefa.diasAteFinalizar}">
+                    <h:outputText value="#{tarefa.diasAteFinalizar} dias "/>
+                </p:column>
+
+                <!--Coluna do título -->
                 <p:column headerText="Titulo" filterBy="#{tarefa.titulo}" sortBy="#{tarefa.titulo}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains" style="text-align: center;">
                     <h:outputText value="#{tarefa.titulo}"/>
                 </p:column>
 
-                <!-- Campo e Filtro por responsável -->
+                <!--Coluna da descrição -->
+                <p:column headerText="Descrição" filterBy="#{tarefa.descricao}"
+                          filterMatchMode="contains" style="text-align:center;">
+                    <h:outputText value="#{tarefa.descricao}"/>
+                </p:column>
+
+                <!-- Coluna com Campo e Filtro por responsável -->
                 <p:column field="Responsável" filterMatchMode="exact"
                           sortBy="#{tarefa.usuario.email}"
-                          filterBy="#{tarefa.usuario.email}">
+                          filterBy="#{tarefa.usuario.email}" style="text-align: center;">
                     <f:facet name="filter">
                         <p:selectOneMenu onchange="PF('tabelaDeTarefas').filter()" styleClass="ui-custom-filter">
                             <f:selectItem itemLabel="All" itemValue="" noSelectionOption="true"/>
@@ -58,15 +71,11 @@
                                   value="#{tarefa.usuario.email}"/>
                 </p:column>
 
-                <p:column headerText="Descrição" filterBy="#{tarefa.descricao}"
-                          sortBy="#{tarefa.descricao}"
-                          filterMatchMode="contains">
-                    <h:outputText value="#{tarefa.descricao}"/>
-                </p:column>
-                <!-- Campo e Filtro por Situação -->
+                <!-- Coluna com Campo e Filtro por Situação -->
                 <p:column field="Situação" filterMatchMode="exact"
                           sortBy="#{tarefa.situacao}"
-                          filterBy="#{tarefa.situacao}">
+                          filterBy="#{tarefa.situacao}"
+                          style="width:12%; text-align: center;">
                     <f:facet name="filter">
                         <p:selectOneMenu onchange="PF('tabelaDeTarefas').filter()" styleClass="ui-custom-filter">
                             <f:selectItem itemLabel="All" itemValue="" noSelectionOption="true"/>
@@ -80,11 +89,17 @@
                                   value="#{tarefa.situacao}"/>
                 </p:column>
 
-                <p:column headerText="Ações">
+                <!-- Coluna de Ações -->
+                <p:column headerText="Ações" style="width:13%;">
                     <!--Botões de finalizar e editar -->
-                    <p:growl id="growl-acoes"/>
-                    <p:splitButton value="Finalizar" update="growl-acoes" icon="pi pi-check"
+                    <p:splitButton value="Finalizar" update="messages" icon="pi pi-check"
                                    oncomplete="PF('dlgFinalizarTarefa').show()">
+
+                        <!-- Botão para detalhes da tarefa -->
+                        <p:menuitem value="Detalhes" icon="pi pi-search"
+                                    outcome="/views/tarefas/ver-tarefa">
+                            <f:param name="idTarefa" value="#{tarefa.id}"/>
+                        </p:menuitem>
 
                         <!-- Botão para Editar (Redireciona com ID) -->
                         <p:menuitem value="Editar" icon="pi pi-pencil"
@@ -116,7 +131,7 @@
                          header="Confirmar"
                          severity="warn">
             <p:commandButton value="Sim" icon="pi pi-check"
-                             update="tabelaDeTarefas"
+                             update="tabelaDeTarefas messages"
                              actionListener="#{tarefasBean.finalizarTarefa()}"
                              process="@this"
                              oncomplete="PF('dlgFinalizarTarefa').hide()"/>
@@ -132,7 +147,7 @@
                          header="Confirmar"
                          severity="warn">
             <p:commandButton value="Sim" icon="pi pi-check"
-                             update="tabelaDeTarefas"
+                             update="tabelaDeTarefas messages"
                              actionListener="#{tarefasBean.excluirTarefa()}"
                              process="@this"
                              oncomplete="PF('dlgExcluirTarefa').hide()"/>

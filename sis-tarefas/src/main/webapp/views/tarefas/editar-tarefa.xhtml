@@ -13,6 +13,7 @@
 
 </h:head>
 <h:body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9;">
+    <p:growl id="messages" showDetail="true" life="2000"/>
     <h:form>
         <div class="flex flex-column align-items-center surface-card p-4 shadow-2 border-round"
              style="width: 600px; text-align: center; background: white;">
@@ -82,7 +83,7 @@
             </p:panelGrid>
             <div class="flex justify-content-between mt-3" style="width: 100%;">
                 <p:button value="Voltar" outcome="/views/tarefas/geral-tarefas" icon="pi pi-arrow-left"/>
-                <p:commandButton value="Editar" action="#{tarefasBean.editarTarefa()}" update="@form"/>
+                <p:commandButton value="Editar" action="#{tarefasBean.editarTarefa()}" update="@form messages"/>
             </div>
 
         </div>
