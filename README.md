@@ -25,7 +25,7 @@ O Sis-Tarefas é o resultado da minha atividade. A aplicação possibilita o man
 
 ### Resumo de funcionalidades e itens implementados
 - [X] Aplicação Java Web:
-    - Utilização do framework PrimeFaces;
+    - Utilização do framework JSF com PrimeFaces;
     - CRUD de Tarefas;
     - Tabela de visualização e filtragem dinâmica das tarefas, e
     - Criação e exclusão de responsáveis.
